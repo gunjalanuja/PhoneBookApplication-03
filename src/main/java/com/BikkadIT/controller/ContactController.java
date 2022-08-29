@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -72,6 +73,19 @@ public ResponseEntity<String> updateContact(@RequestBody Contact contact)
 	{
 	String msg="Contact not updated Sucessfully";
 	return new ResponseEntity<String>(msg,HttpStatus.BAD_REQUEST);
+	}
+}
+@DeleteMapping(value="/deleteById/{contactId}")
+public ResponseEntity<String> deleteById(@PathVariable Integer contactId)
+{
+	boolean deleteByIdHard = contactServiceI.deleteByIdHard(contactId);
+	if(deleteByIdHard)
+	{
+	return new ResponseEntity<String>("Record deleted Sucessfully",HttpStatus.OK);
+	}
+	else
+	{
+		return new ResponseEntity<String>("Record not deleted Sucessfully",HttpStatus.OK);
 	}
 }
 }

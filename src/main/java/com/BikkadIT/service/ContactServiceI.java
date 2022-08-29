@@ -10,5 +10,6 @@ public interface ContactServiceI
   List<Contact> getAllContact();
   Contact getContactById(Integer contactId);
   boolean updateContact(Contact contact);
+  boolean deleteByIdHard(Integer contactId);
  
 }

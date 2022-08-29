@@ -61,4 +61,20 @@ public class ContactServiceImpl implements  ContactServiceI
 		
 	}
 
+	@Override
+	public boolean deleteByIdHard(Integer contactId) 
+	{
+		boolean existsById = contactRepository.existsById(contactId);
+		if(existsById)
+		{
+			contactRepository.deleteById(contactId);
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+		
+	}
+
 }
