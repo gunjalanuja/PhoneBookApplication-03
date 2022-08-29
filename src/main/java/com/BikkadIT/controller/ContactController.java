@@ -1,6 +1,8 @@
 package com.BikkadIT.controller;
 
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,11 +16,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.BikkadIT.model.Contact;
+import com.BikkadIT.repository.ContactRepository;
 import com.BikkadIT.service.ContactServiceI;
 
 @RestController
 public class ContactController 
 {
+	@Autowired
+	private ContactRepository contactRepository;
 	@Autowired
  private	ContactServiceI contactServiceI;
 	
@@ -42,6 +47,8 @@ public class ContactController
 @GetMapping(value="/getAllContact",produces="application/json")	
 public ResponseEntity<List<Contact>> getAllContact()
 {
+	
+	
 	List<Contact> allContact = contactServiceI.getAllContact();
 	if( allContact!=null)
 	{
@@ -87,5 +94,16 @@ public ResponseEntity<String> deleteById(@PathVariable Integer contactId)
 	{
 		return new ResponseEntity<String>("Record not deleted Sucessfully",HttpStatus.OK);
 	}
+}
+@GetMapping(value="/getAllContactsoft",produces="application/json")	//**
+public ResponseEntity<List<Contact>> getAllContactSoft()
+{
+    List<Contact> contacts = contactRepository.findAll();
+    Stream<Contact> stream = contacts.stream();
+    Stream<Contact> filter = stream.filter(contact->contact.getActiveSwitch()=='Y');
+    List<Contact> collect = filter.collect(Collectors.toList());
+    return (ResponseEntity<List<Contact>>) collect;
+    
+	
 }
 }
