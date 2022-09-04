@@ -1,8 +1,7 @@
 package com.BikkadIT.controller;
 
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,14 +15,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.BikkadIT.model.Contact;
-import com.BikkadIT.repository.ContactRepository;
+
 import com.BikkadIT.service.ContactServiceI;
 
 @RestController
 public class ContactController 
 {
-	@Autowired
-	private ContactRepository contactRepository;
+	
 	@Autowired
  private	ContactServiceI contactServiceI;
 	
@@ -44,30 +42,35 @@ public class ContactController
 			
 		}
 	}
-@GetMapping(value="/getAllContact",produces="application/json")	
-public ResponseEntity<List<Contact>> getAllContact()
-{
 	
 	
-	List<Contact> allContact = contactServiceI.getAllContact();
-	if( allContact!=null)
+	@GetMapping(value="/getAllContact",produces="application/json")	
+	public ResponseEntity<List<Contact>> getAllContact()
 	{
-		return new ResponseEntity<List<Contact>>(allContact,HttpStatus.OK);
-	}
-	else
-	{
-		String msg="Data not found";
-		return new ResponseEntity(msg,HttpStatus.BAD_REQUEST);
-	}
+		
 	
-}
+		List<Contact> allContact = contactServiceI.getAllContact();
+		if( allContact!=null)
+		{
+			return new ResponseEntity<List<Contact>>(allContact,HttpStatus.OK);
+		}
+		else
+		{
+			String msg="Data not found";
+			return new ResponseEntity(msg,HttpStatus.BAD_REQUEST);
+		}
+		
+		
+		
+		
+	}
 @GetMapping(value="/getContactById/{contactId}",produces="application/json")
 public ResponseEntity<Contact> getContactById(@PathVariable Integer contactId)
 {
 	Contact contactById = contactServiceI.getContactById(contactId);
 	return new ResponseEntity<Contact>(contactById,HttpStatus.OK);
 }
-@PutMapping(value="/updateContact",produces="application/json")
+@PutMapping(value="/updateContact",produces="application/String")
 public ResponseEntity<String> updateContact(@RequestBody Contact contact)
 {
 	boolean updateContact = contactServiceI.updateContact(contact);
@@ -85,8 +88,8 @@ public ResponseEntity<String> updateContact(@RequestBody Contact contact)
 @DeleteMapping(value="/deleteById/{contactId}")
 public ResponseEntity<String> deleteById(@PathVariable Integer contactId)
 {
-	boolean deleteByIdHard = contactServiceI.deleteByIdHard(contactId);
-	if(deleteByIdHard)
+	boolean deleteById = contactServiceI.deleteById(contactId);
+	if(deleteById)
 	{
 	return new ResponseEntity<String>("Record deleted Sucessfully",HttpStatus.OK);
 	}
@@ -95,15 +98,8 @@ public ResponseEntity<String> deleteById(@PathVariable Integer contactId)
 		return new ResponseEntity<String>("Record not deleted Sucessfully",HttpStatus.OK);
 	}
 }
-@GetMapping(value="/getAllContactsoft",produces="application/json")	//**
-public ResponseEntity<List<Contact>> getAllContactSoft()
-{
-    List<Contact> contacts = contactRepository.findAll();
-    Stream<Contact> stream = contacts.stream();
-    Stream<Contact> filter = stream.filter(contact->contact.getActiveSwitch()=='Y');
-    List<Contact> collect = filter.collect(Collectors.toList());
-    return (ResponseEntity<List<Contact>>) collect;
-    
-	
-}
+
+
+
+
 }
